@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingText = document.getElementById('loadingText');
     const loadingAscii = document.getElementById('loadingAscii');
     const audioToggleButton = document.getElementById('audioToggle');
+    const audioVolume = new Tone.Volume(-24).toDestination();
 
     let currentPath = '';
     let jokeIndex = 0;
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Initialize the audio context
             Tone.start();
-            synth = new Tone.Synth().toDestination();
+            synth = new Tone.Synth().connect(audioVolume);
             enterSynth = new Tone.Synth({
                 oscillator: { type: 'square' },
                 envelope: {
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sustain: 0.01,
                     release: 0.1
                 }
-            }).toDestination();
+            }).connect(audioVolume);
             isAudioInitialized = true;
         } catch (e) {
             console.error('Failed to start Tone.js audio context:', e);
@@ -40,18 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playBeep() {
         if (!isMuted && isAudioInitialized) {
-            synth.triggerAttackRelease("C5", "8n");
+            synth.triggerAttackRelease("D2", "4n");
         }
     }
 
     function playEnterSound() {
         if (!isMuted && isAudioInitialized) {
-            enterSynth.triggerAttackRelease("G4", "8n");
+            enterSynth.triggerAttackRelease("D2", "8n");
         }
     }
 
     audioToggleButton.addEventListener('click', () => {
-        // User interaction, so we can initialize audio
+        // User interaction, so audio can initialize
         setupAudio();
         isMuted = !isMuted;
         audioToggleButton.textContent = isMuted ? 'UNMUTE AUDIO' : 'MUTE AUDIO';

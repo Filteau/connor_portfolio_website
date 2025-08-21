@@ -1,0 +1,5 @@
+RESOURCES USED IN PROJECT
+
+Clarification: This is heavily inspired by the Fallout game/TV series
+
+- Tone.js: https://tonejs.github.io/docs/15.1.22/index.html
