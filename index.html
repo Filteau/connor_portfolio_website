@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Connor's Terminal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+<body>
+    <div id="loadingScreen" class="loading-screen">
+        <pre id="loadingAscii"></pre>
+        <div id="loadingText" class="loading-text">LOADING... 0%</div>
+    </div>
+
+    <div class="terminal-wrapper">
+        <div class="audio-controls">
+            <button id="audioToggle">MUTE AUDIO</button>
+        </div>
+        <div class="terminal-header">
+            <span class="terminal-title">FILTEAU TERMiNOS-LINK</span>
+            <div id="terminal-status">STATUS: ONLINE</div>
+        </div>
+        <div class="terminal-screen" id="terminalScreen">
+            <div id="terminalOutput"></div>
+            <div class="terminal-input-line">
+                <span class="prompt"></span>
+                <input type="text" id="terminalInput" autofocus autocomplete="off" spellcheck="false">
+                <span class="cursor">_</span>
+            </div>
+        </div>
+        <div class="terminal-footer">
+            <span class="footer-text">VAULT PROGRAMMER: [CONNOR FILTEAU]</span>
+            <span class="footer-text">VAULT VERSION: 1.1.1.</span>
+        </div>
+        <div class="scanlines"></div>
+    </div>
+
+    <script src="scripts.js" defer></script>
+</body>
+</html>
