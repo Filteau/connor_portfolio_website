@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingText = document.getElementById('loadingText');
     const loadingAscii = document.getElementById('loadingAscii');
     const audioToggleButton = document.getElementById('audioToggle');
-    const audioVolume = new Tone.Volume(-24).toDestination();
+    const now = new Date();
+    const audioVolume = new Tone.Volume(-20).toDestination();
 
     let currentPath = '';
     let jokeIndex = 0;
@@ -28,9 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 oscillator: { type: 'square' },
                 envelope: {
                     attack: 0.001,
-                    decay: 0.1,
-                    sustain: 0.01,
-                    release: 0.1
+                    decay: 0.001,
+                    sustain: 0.001,
+                    release: 0.001
                 }
             }).connect(audioVolume);
             isAudioInitialized = true;
@@ -41,18 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playBeep() {
         if (!isMuted && isAudioInitialized) {
-            synth.triggerAttackRelease("D2", "4n");
+            synth.triggerAttackRelease("D3", "4n");
         }
     }
 
     function playEnterSound() {
         if (!isMuted && isAudioInitialized) {
-            enterSynth.triggerAttackRelease("D2", "8n");
+            enterSynth.triggerAttackRelease("D3", "4n");
         }
     }
 
     audioToggleButton.addEventListener('click', () => {
-        // User interaction, so audio can initialize
+        // User interaction, so we can initialize audio here
         setupAudio();
         isMuted = !isMuted;
         audioToggleButton.textContent = isMuted ? 'UNMUTE AUDIO' : 'MUTE AUDIO';
@@ -64,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         - about     : Learn about me.
         - projects  : See my projects.
         - socials   : Find me on the net.
-        - tools     : Access tools tools.
-        - clear     : Clear the terminal screen.
+        - tools     : Access tools.
         - greetings : Get a friendly message.
+        - clear     : Clear the terminal screen.
         - exit      : Exit current mode.
 `,
         'about': `
@@ -103,15 +104,37 @@ LINK           : [this be where I put the link]
 `;
             await typeText(otherProjects);
             return '';
-        },
+        }, 
+    'socials': async () => {
+    // first output the plain text bit
+    await typeText("SOCIALS\n");
+    await typeText("LINKEDIN    : ");
+    const linkedinLink = document.createElement('a');
+    linkedinLink.href = "https://www.linkedin.com/in/connor-ebel-28a001187/";
+    linkedinLink.target = "_blank";
+    linkedinLink.textContent = "linkedin.com/in/connorfilteau";
+    terminalOutput.appendChild(linkedinLink);
     
-        // TODO: fix the links below
-        'socials': `SOCIALS
-LINKEDIN    : <a href="https://www.linkedin.com/in/connor-ebel-28a001187/" target="_blank">linkedin.com/in/connorfilteau</a>
-GITHUB      : <a href="https://github.com/Filteau" target="_blank">github.com/Filteau</a>
-EMAIL       : ebel.work@gmail.com
-`,
-        'tools': `Entering tools TOOLS mode.
+    // line break for the next line
+    terminalOutput.appendChild(document.createElement('br'));
+    
+    await typeText("GITHUB      : ");
+    const githubLink = document.createElement('a');
+    githubLink.href = "https://github.com/Filteau";
+    githubLink.target = "_blank";
+    githubLink.textContent = "github.com/Filteau";
+    terminalOutput.appendChild(githubLink);
+
+    // another line break
+    terminalOutput.appendChild(document.createElement('br'));
+
+    // I'm outputting the email as plain text since it's not clickable
+    await typeText("EMAIL       : ebel.work@gmail.com\n");
+
+    // Ensure the terminal scrolls to the bottom
+    terminalScreen.scrollTop = terminalScreen.scrollHeight;
+},
+        'tools': `Entering TOOLS mode.
 Available tools:
     - time      : Current Time and Date
     - joke      : Tell me a joke!
@@ -119,13 +142,11 @@ Available tools:
 
 Type a tool name or 'exit'.
 `,
-        'tools-time': () => {
-            const now = new Date();
-            return `CURRENT SYSTEM TIME: ${now.toLocaleTimeString()}
+        'time':`CURRENT SYSTEM TIME: ${now.toLocaleTimeString()}
 CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
-`;
-        },
-        'tools-joke': () => {
+`
+        ,
+        'joke': () => {
             const jokes = [
                 "Why don't scientists trust atoms? Because they make up everything!\n",
                 "Did you hear about the two guys who stole a calendar? They each got six months.\n",
@@ -174,7 +195,7 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
         });
     }
 
-    // Process user input
+    // process user input
     terminalInput.addEventListener('keydown', async (event) => {
         // user interaction, initialize audio
         setupAudio();
@@ -197,28 +218,41 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
                     response = "Exiting TOOLS mode. Type 'help' for main commands.\n";
                     await typeText(response);
                 } else if (commands[`tools-${command}`]) {
-                    response = commands[`tools-${command}`]();
-                    await typeText(response);
+                    // This part is correct for handling sub-commands
+                    const commandResult = commands[`tools-${command}`];
+                    if (typeof commandResult === 'function') {
+                        const resultText = commandResult();
+                        await typeText(resultText);
+                    } else {
+                        await typeText(commandResult);
+                    }
                 } else {
                     response = `UNKNOWN COMMAND: ${command}\nType 'exit' to return or 'help' for tools.\n`;
                     await typeText(response);
                 }
             } else { // Main path
                 if (commands[command]) {
-    const commandResult = commands[command];
-    if (typeof commandResult === 'function') {
-        // The projects command needs to be handled separately since it doesn't return a string,
-        //  it types out the text internally.
-        if (command === 'projects' || command === 'socials') {
-            await commandResult();
-        } else {
-            const resultText = commandResult();
-            await typeText(resultText);
-        }
-    } else {
-        await typeText(commandResult);
-    }
-}
+                    const commandResult = commands[command];
+                    if (typeof commandResult === 'function') {
+                        if (command === 'projects' || command === 'socials') {
+                            await commandResult();
+                        } else if (command === 'tools') {
+                            // ADDED LINE TO SET THE PATH
+                            currentPath = 'tools'; 
+                            // Then type the response for the tools command
+                            await typeText(commands['tools']);
+                        } else if (command === 'clear') {
+                            terminalOutput.innerHTML = '';
+                        } else {
+                            const resultText = commandResult();
+                            await typeText(resultText);
+                        }
+                    } else {
+                        await typeText(commandResult);
+                    }
+                } else {
+                    await typeText(`UNKNOWN COMMAND: ${command}\nType 'help' for a list of commands.\n`);
+                }
             }
 
             terminalInput.disabled = false;
