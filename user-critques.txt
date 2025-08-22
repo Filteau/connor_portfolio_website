@@ -1,6 +1,6 @@
-1.) Sound is too loud, tone it down
-2.) Exit function in tools does not work
-3.) Add education to the list in 'about' section
-4.) Add links to socials
+1.) Sound is too loud, tone it down [FIXED]
+2.) Exit function in tools does not work [PATCHED]
+3.) Add education to the list in 'about' section [FIXED]
+4.) Add links to socials [FIXED]
 5.) Add a couple possible answers for each section; e.g., 'about' could also accept 'about me'
-6.) 
+6.) Clear function does not work
