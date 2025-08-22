@@ -74,8 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
 ABOUT CONNOR
 NAME        : [CONNOR FILTEAU]
 OCCUPATION  : [DATA ANALYST & RESPIRATORY THERAPIST]
-SKILLS      : [PYTHON, C++, JAVA, RESTful API]
-INTERESTS   : [READING, CODING, SCIENCE, FOOD, HISTORY, MUSIC, TRAVEL]
+SKILLS      : [PYTHON, C++, JAVA]
+EDUCATION   : [COMPUTER SCIENCE BS.CS, SNHU]
+              [RESPIRATORY THERAPY AAS., SCC]
+INTERESTS   : [READING, CODING, SCIENCE, COOKING, FOOD, HISTORY, MUSIC, TRAVEL]
 `,
         'projects': async () => {
             const projectsText = `CONNOR'S PROJECTS
@@ -155,8 +157,7 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
                 "How many lives does an irradiated cat have? 18 half-lives.\n",
                 "Yo mama so ugly, even a deathclaw runs away when they see her.\n"
             ];
-            const joke = jokes[jokeIndex % jokes.length];
-            jokeIndex++;
+            const joke = jokes[Math.floor(Math.random() * jokes.length)];
             return joke;
         },
         'greetings': () => {
@@ -169,8 +170,13 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
             const greeting = greetings[Math.floor(Math.random() * greetings.length)];
             return greeting;
         },
-        
-    };
+        'exit': async () => {
+            currentPath = '';
+            await typeText ("Exiting to main menu, type 'help' to view menu.\n");
+            return 'help';
+        }
+
+    }; // end commands
 
     // function that will typeout the text with a little delay
     function typeText(text) {
@@ -239,7 +245,7 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
                         } else if (command === 'tools') {
                             // ADDED LINE TO SET THE PATH
                             currentPath = 'tools'; 
-                            // Then type the response for the tools command
+                            // then type the response for the tools command
                             await typeText(commands['tools']);
                         } else if (command === 'clear') {
                             terminalOutput.innerHTML = '';
@@ -260,7 +266,7 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
             cursor.style.display = 'inline-block';
             prompt.textContent = '>';
         } else {
-            // Play a beep for each key press, except for backspace and arrow keys
+            // play a beep for each key press, except for backspace and arrow keys
             if (event.key.length === 1) {
                 playBeep();
             }
@@ -305,18 +311,18 @@ CURRENT SYSTEM DATE: ${now.toLocaleDateString()}
 
     async function displayTerminalContent() {
         const vaultTecAscii = `
-                               XXXXXXXX
-            XXXXXXXXXXXXXX XXXX       X
+                 XXXXXX        XXXXXXX
+            XXXXXX     XXX XXXX       X
           XXXXX          XXX          X
          XXXX              XX       XX
         XXXX                XX   XXX
-        XXX                  XXXX
+        XXX                  X XX
        XXX                  X X
-       X X              X X   X
+       X X              XXX   X
      XXX X          XXX       X
   XXX  XX        XXX        XXX
 XX      XX   XXX          XXX
-X       XXXXXX       XXXXXX
+X        XXXXX       XXXXXX
  XXXXXXXX    XXXXXXXXX
 `;
         await typeText(`${vaultTecAscii}\n`);
